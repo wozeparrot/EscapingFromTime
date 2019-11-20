@@ -3,6 +3,7 @@ import time
 
 import player
 import levels.test_level.test_level
+import levels.level1.level1
 
 class App:
     draw_delta = 0.0
@@ -47,4 +48,4 @@ class App:
         self.draw_last_time = current_time       
 
 
-App(256, 256, 24)
+App(256, 256, 30)

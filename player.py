@@ -19,35 +19,62 @@ class Player:
 
     def update(self, level):
         if level is not None:
-            if pyxel.btn(pyxel.KEY_LEFT):
-                self.direction = -1
-                self.moving = True
-                self.x -= 2
-            elif pyxel.btn(pyxel.KEY_RIGHT):
-                self.direction = 1
-                self.moving = True
-                self.x += 2
-            else:
+            if self.x + 8 + 3 < 255 and level[math.floor((self.y + 8)/16)][int((self.x + 8 + 5)/16)] == 0:
+                if pyxel.btn(pyxel.KEY_RIGHT):
+                    self.direction = 1
+                    self.moving = True
+                    self.x += 2
+                elif not pyxel.btn(pyxel.KEY_LEFT):
+                    self.moving = False
+            elif not pyxel.btn(pyxel.KEY_LEFT):
+                self.moving = False
+            if self.x + 8 - 5 >= 0 and level[math.floor((self.y + 8)/16)][int((self.x + 8 - 6)/16)] == 0:
+                if pyxel.btn(pyxel.KEY_LEFT):
+                    self.direction = -1
+                    self.moving = True
+                    self.x -= 2
+                elif not pyxel.btn(pyxel.KEY_RIGHT):
+                    self.moving = False
+            elif not pyxel.btn(pyxel.KEY_RIGHT):
+                self.moving = False
+            
+            if pyxel.btn(pyxel.KEY_RIGHT) and pyxel.btn(pyxel.KEY_LEFT):
                 self.moving = False
             
             if pyxel.btnr(pyxel.KEY_RIGHT) or pyxel.btnr(pyxel.KEY_LEFT) or pyxel.btnp(pyxel.KEY_RIGHT) or pyxel.btnp(pyxel.KEY_LEFT):
                 self.player_frame = 0
             
-            if level[math.floor((self.y + 8 + 5)/16)][int((self.x + 8 - 4)/16)] == 0:
-                if not self.jumping:
-                    self.y += 2
+            if self.y + 8 + 5 < 255:
+                if level[math.floor((self.y + 8 + 5)/16)][int((self.x + 8)/16)] == 0:
+                    if not self.jumping:
+                        self.y += 2
+                else:
+                    if pyxel.btnp(pyxel.KEY_UP):
+                        self.jumping = True
+                        self.jump_timer = 0
             else:
-                if pyxel.btnp(pyxel.KEY_UP):
-                    self.jumping = True
+                self.x = 0
+                self.y = 0
+
+            if self.y + 8 - 5 >= 0:
+                if self.jumping is True and self.jump_timer <= 3:
+                    self.y -= 4
+                    self.jump_timer += 1
+                elif self.jumping is True and self.jump_timer <= 6:
+                    self.y -= 3
+                    self.jump_timer += 1
+                elif self.jumping is True and self.jump_timer <= 9:
+                    self.y -= 2
+                    self.jump_timer += 1
+                elif self.jumping is True and self.jump_timer <= 12:
+                    self.y -= 1
+                    self.jump_timer += 1
+                else:
                     self.jump_timer = 0
-            if self.jumping is True and self.jump_timer < 7:
-                self.y -= 4
-                self.jump_timer += 1
+                    self.jumping = False
             else:
                 self.jump_timer = 0
                 self.jumping = False
-            
-            print(level[math.floor((self.y + 4 + 9)/16)][math.floor((self.x + 4)/16)])
 
     def draw(self, level):
         pyxel.load("player.pyxres")
